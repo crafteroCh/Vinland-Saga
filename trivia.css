@@ -1,0 +1,611 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+
+    min-height: 100vh;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 20px;
+
+    font-family: Arial, sans-serif;
+
+    color: white;
+
+    background: url("Img/fondo.PNG") center center / cover no-repeat;
+
+    background-color: #000000;
+
+    background-attachment: fixed;
+}
+
+
+.envoltura-principal {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: clamp(12px, 2vw, 30px);
+
+    width: 100%;
+}
+
+
+.deco {
+
+    width: clamp(70px, 10vw, 140px);
+
+    height: auto;
+
+    object-fit: contain;
+
+    opacity: 0.9;
+
+    filter:
+        drop-shadow(
+            0 0 18px
+            rgba(212, 175, 55, 0.35)
+        );
+
+    flex-shrink: 0;
+}
+
+
+.musica-btn {
+
+    position: fixed;
+
+    right: 20px;
+
+    bottom: 20px;
+
+    padding: 10px 14px;
+
+    border: 2px solid #d4af37;
+
+    border-radius: 8px;
+
+    background: rgba(26, 26, 26, 0.9);
+
+    color: #ffffff;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    z-index: 10;
+}
+
+
+.musica-btn:hover {
+
+    background: #d4af37;
+
+    color: #1a1a1a;
+}
+
+
+.trivia-container {
+
+    width: 100%;
+
+    max-width: 850px;
+
+    min-height: 520px;
+
+    padding: 40px;
+
+    background: rgba(20, 20, 20, 0.94);
+
+    border: 1px solid
+        rgba(255, 255, 255, 0.15);
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 20px 60px
+        rgba(0, 0, 0, 0.7);
+}
+
+
+.pantalla {
+
+    display: none;
+
+    min-height: 440px;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+}
+
+
+.pantalla.activa {
+
+    display: flex;
+}
+
+
+.logo {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+
+.titulo-img {
+
+    display: block;
+
+    width: min(80vw, 520px);
+
+    height: auto;
+
+    object-fit: contain;
+
+    filter:
+        drop-shadow(
+            0 0 18px
+            rgba(212, 175, 55, 0.25)
+        );
+}
+
+
+.descripcion {
+
+    max-width: 600px;
+
+    margin: 35px 0;
+
+    line-height: 1.7;
+
+    color: #cccccc;
+
+    font-size: 17px;
+}
+
+
+.btn {
+
+    padding: 15px 35px;
+
+    border: none;
+
+    border-radius: 5px;
+
+    background: #c7a15a;
+
+    color: #111111;
+
+    font-weight: bold;
+
+    font-size: 15px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+
+.btn:hover {
+
+    transform: scale(1.05);
+
+    background: #e0bd70;
+
+    box-shadow:
+        0 0 20px
+        rgba(199, 161, 90, 0.4);
+}
+
+
+.resultado-imagen {
+
+    display: block;
+
+    width: 160px;
+
+    height: 160px;
+
+    object-fit: cover;
+
+    border-radius: 18px;
+
+    margin: 18px 0 24px;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transform:
+        translateY(90px)
+        scale(0.7);
+
+    filter:
+        drop-shadow(
+            0 16px 28px
+            rgba(212, 175, 55, 0.45)
+        );
+}
+
+
+.resultado-imagen.activa {
+
+    visibility: visible;
+
+    animation:
+        saltoResultado
+        0.9s
+        cubic-bezier(
+            0.2,
+            0.85,
+            0.25,
+            1.15
+        )
+        forwards;
+}
+
+
+@keyframes saltoResultado {
+
+    0% {
+
+        opacity: 0;
+
+        transform:
+            translateY(90px)
+            scale(0.7);
+    }
+
+
+    55% {
+
+        opacity: 1;
+
+        transform:
+            translateY(-18px)
+            scale(1.08);
+    }
+
+
+    75% {
+
+        transform:
+            translateY(10px)
+            scale(0.96);
+    }
+
+
+    100% {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+.btn:disabled {
+
+    opacity: 0.4;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+
+.quiz-header {
+
+    width: 100%;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 15px;
+
+    color: #c7a15a;
+
+    font-weight: bold;
+}
+
+
+.progreso {
+
+    width: 100%;
+
+    height: 8px;
+
+    margin-bottom: 40px;
+
+    background: #333333;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+}
+
+
+#barraProgreso {
+
+    height: 100%;
+
+    width: 0%;
+
+    background: #c7a15a;
+
+    transition:
+        width 0.4s ease;
+}
+
+
+.pregunta-container {
+
+    width: 100%;
+
+    margin-bottom: 30px;
+}
+
+
+#pregunta {
+
+    margin-bottom: 30px;
+
+    font-size:
+        clamp(
+            22px,
+            4vw,
+            32px
+        );
+
+    line-height: 1.4;
+}
+
+
+.respuestas {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 15px;
+}
+
+
+.respuesta {
+
+    padding: 18px;
+
+    background: #292929;
+
+    border: 2px solid transparent;
+
+    border-radius: 8px;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 16px;
+
+    transition: 0.25s;
+}
+
+
+.respuesta:hover {
+
+    background: #353535;
+
+    border-color: #c7a15a;
+
+    transform:
+        translateY(-2px);
+}
+
+
+.respuesta:disabled {
+
+    cursor: default;
+}
+
+
+.respuesta.correcta {
+
+    background: #315a38;
+
+    border-color: #65c276;
+}
+
+
+.respuesta.incorrecta {
+
+    background: #612f2f;
+
+    border-color: #d15c5c;
+}
+
+
+.siguiente {
+
+    margin-top: auto;
+}
+
+
+#resultado h1 {
+
+    font-size:
+        clamp(
+            30px,
+            6vw,
+            50px
+        );
+
+    margin-bottom: 30px;
+}
+
+
+.resultado-box {
+
+    margin-bottom: 35px;
+}
+
+
+.resultado-box p {
+
+    color: #bbbbbb;
+
+    margin: 10px;
+}
+
+
+#puntosFinales {
+
+    display: block;
+
+    font-size: 65px;
+
+    color: #c7a15a;
+
+    margin: 10px;
+}
+
+
+#mensajeResultado {
+
+    font-size: 20px;
+
+    color: white;
+}
+
+
+@media (max-width: 650px) {
+
+    body {
+
+        padding: 10px;
+    }
+
+
+    .deco {
+
+        display: none;
+    }
+
+
+    .envoltura-principal {
+
+        width: 100%;
+    }
+
+
+    .trivia-container {
+
+        width: 100%;
+
+        padding: 25px 20px;
+
+        border-radius: 12px;
+    }
+
+
+    .pantalla {
+
+        min-height: 470px;
+    }
+
+
+    .respuestas {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .quiz-header {
+
+        font-size: 13px;
+    }
+
+
+    .descripcion {
+
+        font-size: 15px;
+    }
+
+
+    .btn {
+
+        width: 100%;
+
+        max-width: 350px;
+    }
+}
+
+
+@media (max-width: 400px) {
+
+    .trivia-container {
+
+        padding: 20px 15px;
+    }
+
+
+    .logo h1 {
+
+        letter-spacing: 2px;
+
+        font-size: 38px;
+    }
+
+
+    .logo p {
+
+        font-size: 18px;
+
+        letter-spacing: 6px;
+    }
+
+
+    #pregunta {
+
+        font-size: 22px;
+    }
+
+
+    .respuesta {
+
+        padding: 15px;
+
+        font-size: 15px;
+    }
+
+
+    #puntosFinales {
+
+        font-size: 55px;
+    }
+}

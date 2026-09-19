@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vinland Saga Trivia</title>
+    <link rel="icon" type="image/webp" href="Img/titulo.webp">
+    <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+
+    <div class="titulo-imagen">
+        <img src="Img/titulo.webp" alt="Título Cryptex">
+    </div>
+
+    <div class="envoltura-principal">
+        <img class="deco deco-izquierda" src="Img/espadas.jfif" alt="Decoración izquierda">
+
+        <div class="card text-bg-dark">
+            <img src="img/card_index.jfif" class="card-img" alt="Card principal">
+            <div class="card-img-overlay">
+                <h5 class="card-title">Vinland Saga</h5>
+                <p class="card-text">Vinland Saga es un manga y anime histórico de acción y drama que narra la evolución de Thorfinn, un joven vikingo que pasa de buscar una venganza sangrienta a rechazar la violencia y buscar la paz</p>
+                <p class="card-text"><small>El autor de Vinland Saga es el mangaka japonés Makoto Yukimura</small></p>
+            </div>
+        </div>
+
+        <img class="deco deco-derecha" src="Img/espadas.jfif" alt="Decoración derecha">
+    </div>
+
+    <button class="cryptex-btn" id="cryptex"></button>
+    <button class="musica-btn" id="musica-btn" type="button" aria-label="Reproducir música">
+        Reproducir música
+    </button>
+
+    <script>
+        const clicsNecesarios = 3;
+        const urlRedireccion = "trivia.html"; 
+        const urlSonidoApertura = "sonidos/candado.mp3"; 
+        const urlMusicaAmbiente = "sonidos/amviente.mp3";
+
+        let contadorClics = 0;
+        const cryptex = document.getElementById('cryptex');
+        const botonMusica = document.getElementById('musica-btn');
+        const sonidoApertura = new Audio(urlSonidoApertura);
+        sonidoApertura.volume = 1;
+        const musicaAmbiente = new Audio(urlMusicaAmbiente);
+        musicaAmbiente.loop = true;
+        musicaAmbiente.volume = 0.12;
+
+        const actualizarBotonMusica = () => {
+            const estaReproduciendo = !musicaAmbiente.paused;
+            botonMusica.textContent = estaReproduciendo ? "Pausar música" : "Reproducir música";
+            botonMusica.setAttribute("aria-label", botonMusica.textContent);
+        };
+
+        musicaAmbiente.play().then(actualizarBotonMusica).catch(actualizarBotonMusica);
+
+        botonMusica.addEventListener('click', () => {
+            if (musicaAmbiente.paused) {
+                musicaAmbiente.play().then(actualizarBotonMusica).catch(actualizarBotonMusica);
+            } else {
+                musicaAmbiente.pause();
+                actualizarBotonMusica();
+            }
+        });
+
+        let redireccionRealizada = false;
+        const redirigir = () => {
+            if (redireccionRealizada) return;
+            redireccionRealizada = true;
+            window.location.href = urlRedireccion;
+        };
+
+        cryptex.addEventListener('click', () => {
+            contadorClics++;
+            if (musicaAmbiente.paused) {
+                musicaAmbiente.play().then(actualizarBotonMusica).catch(actualizarBotonMusica);
+            }
+
+            if (contadorClics === 1) {
+                
+                cryptex.style.borderColor = "#cd7f32"; 
+            } else if (contadorClics === 2) {
+                
+                cryptex.style.borderColor = "#c0c0c0"; 
+            } else if (contadorClics >= clicsNecesarios) {
+                
+                sonidoApertura.addEventListener('ended', redirigir, { once: true });
+                sonidoApertura.currentTime = 0;
+                sonidoApertura.play().catch(() => {
+                    setTimeout(redirigir, 600);
+                });
+                setTimeout(() => {
+                    cryptex.classList.add('abierto');
+                }, 2000);
+
+                setTimeout(redirigir, 5000); 
+            }
+        });
+    </script>
+
+</body>
+</html>

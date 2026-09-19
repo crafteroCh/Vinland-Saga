@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Vinland Saga Trivia</title>
+
+    <link rel="icon" type="image/webp" href="Img/titulo.webp">
+    <link rel="stylesheet" href="trivia.css">
+</head>
+
+<body>
+
+    <div class="envoltura-principal">
+
+        <img
+            class="deco deco-izquierda"
+            src="Img/espadas.jfif"
+            alt="Decoración izquierda"
+        >
+
+        <button
+            class="musica-btn"
+            id="musica-btn"
+            type="button"
+            aria-label="Reproducir música"
+        >
+            Reproducir música
+        </button>
+
+        <main class="trivia-container">
+
+            <section id="inicio" class="pantalla activa">
+
+                <div class="logo">
+                    <img
+                        src="Img/titulo.webp"
+                        alt="Vinland Saga Trivia"
+                        class="titulo-img"
+                    >
+                </div>
+
+                <p class="descripcion">
+                    ¿Cuánto sabes sobre Thorfinn, Askeladd, Canute
+                    y el mundo de Vinland Saga?
+                </p>
+
+                <button class="btn" onclick="comenzarTrivia()">
+                    COMENZAR TRIVIA
+                </button>
+
+            </section>
+
+
+            <section id="quiz" class="pantalla">
+
+                <div class="quiz-header">
+
+                    <span id="numeroPregunta">
+                        Pregunta 1 / 10
+                    </span>
+
+                    <span id="puntuacion">
+                        Puntos: 0
+                    </span>
+
+                </div>
+
+
+                <div class="progreso">
+                    <div id="barraProgreso"></div>
+                </div>
+
+
+                <div class="pregunta-container">
+
+                    <h2 id="pregunta">
+                        Pregunta
+                    </h2>
+
+                    <div id="respuestas" class="respuestas">
+                    </div>
+
+                </div>
+
+
+                <button
+                    id="siguiente"
+                    class="btn siguiente"
+                    onclick="siguientePregunta()"
+                    disabled
+                >
+                    SIGUIENTE
+                </button>
+
+            </section>
+
+
+            <section id="resultado" class="pantalla">
+
+                <h1>TRIVIA TERMINADA</h1>
+
+                <div class="resultado-box">
+
+                    <p>Tu puntuación:</p>
+
+                    <strong id="puntosFinales">
+                        0 / 10
+                    </strong>
+
+                    <p id="mensajeResultado">
+                        Resultado
+                    </p>
+
+                </div>
+
+
+                <img
+                    id="resultadoImagen"
+                    class="resultado-imagen"
+                    src="Img/F.PNG"
+                    alt="Resultado de la trivia"
+                >
+
+
+                <button class="btn" onclick="reiniciarTrivia()">
+                    JUGAR DE NUEVO
+                </button>
+
+            </section>
+
+        </main>
+
+        <img
+            class="deco deco-derecha"
+            src="Img/espadas.jfif"
+            alt="Decoración derecha"
+        >
+
+    </div>
+
+
+    <script>
+
+        const urlMusicaAmbiente = "sonidos/op1.mp3";
+
+        const urlSonidoGanador =
+            "sonidos/ganador.mp3";
+
+        const urlSonidomedio =
+            "sonidos/medio.mp3";
+
+        const urlSonidoPerdedor =
+            "sonidos/perdedor.mp3";
+
+
+        const musicaAmbiente =
+            new Audio(urlMusicaAmbiente);
+
+        musicaAmbiente.loop = true;
+        musicaAmbiente.volume = 0.8;
+
+
+        const sonidoGanador =
+            new Audio(urlSonidoGanador);
+
+        sonidoGanador.volume = 0.12;
+
+
+        const sonidomedio =
+            new Audio(urlSonidomedio);
+
+        sonidomedio.volume = 0.12;
+
+
+        const sonidoPerdedor =
+            new Audio(urlSonidoPerdedor);
+
+        sonidoPerdedor.volume = 0.12;
+
+
+        const botonMusica =
+            document.getElementById("musica-btn");
+
+
+        const actualizarBotonMusica = () => {
+
+            const estaReproduciendo =
+                !musicaAmbiente.paused;
+
+            botonMusica.textContent =
+                estaReproduciendo
+                    ? "Pausar música"
+                    : "Reproducir música";
+
+            botonMusica.setAttribute(
+                "aria-label",
+                botonMusica.textContent
+            );
+        };
+
+
+        musicaAmbiente
+            .play()
+            .then(actualizarBotonMusica)
+            .catch(actualizarBotonMusica);
+
+
+        botonMusica.addEventListener(
+            "click",
+            () => {
+
+                if (musicaAmbiente.paused) {
+
+                    musicaAmbiente
+                        .play()
+                        .then(actualizarBotonMusica)
+                        .catch(actualizarBotonMusica);
+
+                } else {
+
+                    musicaAmbiente.pause();
+
+                    actualizarBotonMusica();
+                }
+
+            }
+        );
+
+
+        const preguntas = [
+
+            {
+                pregunta:
+                    "¿Cómo se llama el protagonista de Vinland Saga?",
+
+                respuestas: [
+                    "Thorfinn",
+                    "Canute",
+                    "Askeladd",
+                    "Thorkell"
+                ],
+
+                correcta: 0
+            },
+
+
+            {
+                pregunta:
+                    "¿Quién fue el padre de Thorfinn?",
+
+                respuestas: [
+                    "Askeladd",
+                    "Thors",
+                    "Thorkell",
+                    "Leif Erikson"
+                ],
+
+                correcta: 1
+            },
+
+
+            {
+                pregunta:
+                    "¿Cuál era el principal objetivo de Thorfinn durante gran parte de su juventud?",
+
+                respuestas: [
+                    "Convertirse en rey",
+                    "Encontrar Vinland",
+                    "Vengarse de Askeladd",
+                    "Conquistar Inglaterra"
+                ],
+
+                correcta: 2
+            },
+
+
+            {
+                pregunta:
+                    "¿Cómo se llama el príncipe que posteriormente se convierte en rey?",
+
+                respuestas: [
+                    "Harald",
+                    "Canute",
+                    "Bjorn",
+                    "Ragnar"
+                ],
+
+                correcta: 1
+            },
+
+
+            {
+                pregunta:
+                    "¿Quién lideraba la banda de guerreros a la que perteneció Thorfinn?",
+
+                respuestas: [
+                    "Thors",
+                    "Canute",
+                    "Askeladd",
+                    "Leif"
+                ],
+
+                correcta: 2
+            },
+
+
+            {
+                pregunta:
+                    "¿Quién es conocido por ser uno de los guerreros más fuertes de la serie?",
+
+                respuestas: [
+                    "Thorkell",
+                    "Bjorn",
+                    "Floki",
+                    "Ketil"
+                ],
+
+                correcta: 0
+            },
+
+
+            {
+                pregunta:
+                    "¿Qué lugar representa el sueño de crear una tierra pacífica?",
+
+                respuestas: [
+                    "Roma",
+                    "Vinland",
+                    "Islandia",
+                    "Dinamarca"
+                ],
+
+                correcta: 1
+            },
+
+
+            {
+                pregunta:
+                    "¿Qué frase está relacionada con las enseñanzas de Thors?",
+
+                respuestas: [
+                    "Un verdadero guerrero no necesita espada",
+                    "El más fuerte siempre gana",
+                    "La guerra trae paz",
+                    "Un rey debe conquistar"
+                ],
+
+                correcta: 0
+            },
+
+
+            {
+                pregunta:
+                    "¿Dónde nació Thorfinn?",
+
+                respuestas: [
+                    "Islandia",
+                    "Inglaterra",
+                    "Dinamarca",
+                    "Noruega"
+                ],
+
+                correcta: 0
+            },
+
+
+            {
+                pregunta:
+                    "¿Qué busca construir Thorfinn al avanzar la historia?",
+
+                respuestas: [
+                    "Un ejército",
+                    "Un reino",
+                    "Una tierra sin guerra ni esclavitud",
+                    "Un imperio vikingo"
+                ],
+
+                correcta: 2
+            }
+
+        ];
+
+
+        let preguntaActual = 0;
+
+        let puntos = 0;
+
+        let respondido = false;
+
+
+        const inicio =
+            document.getElementById("inicio");
+
+
+        const quiz =
+            document.getElementById("quiz");
+
+
+        const resultado =
+            document.getElementById("resultado");
+
+
+        const preguntaTexto =
+            document.getElementById("pregunta");
+
+
+        const respuestasContainer =
+            document.getElementById("respuestas");
+
+
+        const numeroPregunta =
+            document.getElementById("numeroPregunta");
+
+
+        const puntuacion =
+            document.getElementById("puntuacion");
+
+
+        const barraProgreso =
+            document.getElementById("barraProgreso");
+
+
+        const botonSiguiente =
+            document.getElementById("siguiente");
+
+
+        function comenzarTrivia() {
+
+            preguntaActual = 0;
+
+            puntos = 0;
+
+            inicio.classList.remove("activa");
+
+            resultado.classList.remove("activa");
+
+            quiz.classList.add("activa");
+
+            mostrarPregunta();
+        }
+
+
+        function mostrarPregunta() {
+
+            respondido = false;
+
+            botonSiguiente.disabled = true;
+
+
+            const datos =
+                preguntas[preguntaActual];
+
+
+            preguntaTexto.textContent =
+                datos.pregunta;
+
+
+            numeroPregunta.textContent =
+                `Pregunta ${preguntaActual + 1} / ${preguntas.length}`;
+
+
+            puntuacion.textContent =
+                `Puntos: ${puntos}`;
+
+
+            const progreso =
+                (preguntaActual / preguntas.length) * 100;
+
+
+            barraProgreso.style.width =
+                `${progreso}%`;
+
+
+            respuestasContainer.innerHTML = "";
+
+
+            datos.respuestas.forEach(
+                (respuesta, indice) => {
+
+                    const boton =
+                        document.createElement("button");
+
+
+                    boton.classList.add(
+                        "respuesta"
+                    );
+
+
+                    boton.textContent =
+                        respuesta;
+
+
+                    boton.onclick =
+                        function () {
+
+                            seleccionarRespuesta(indice);
+
+                        };
+
+
+                    respuestasContainer.appendChild(
+                        boton
+                    );
+
+                }
+            );
+        }
+
+
+        function seleccionarRespuesta(indice) {
+
+            if (respondido) return;
+
+            respondido = true;
+
+
+            const datos =
+                preguntas[preguntaActual];
+
+
+            const botones =
+                document.querySelectorAll(
+                    ".respuesta"
+                );
+
+
+            botones.forEach(
+                boton => {
+
+                    boton.disabled = true;
+
+                }
+            );
+
+
+            if (indice === datos.correcta) {
+
+                botones[indice]
+                    .classList
+                    .add("correcta");
+
+                puntos++;
+
+            } else {
+
+                botones[indice]
+                    .classList
+                    .add("incorrecta");
+
+
+                botones[datos.correcta]
+                    .classList
+                    .add("correcta");
+            }
+
+
+            puntuacion.textContent =
+                `Puntos: ${puntos}`;
+
+
+            botonSiguiente.disabled = false;
+        }
+
+
+        function siguientePregunta() {
+
+            preguntaActual++;
+
+
+            if (
+                preguntaActual >=
+                preguntas.length
+            ) {
+
+                mostrarResultado();
+
+                return;
+            }
+
+
+            mostrarPregunta();
+        }
+
+
+        function mostrarResultado() {
+
+            quiz.classList.remove("activa");
+
+            resultado.classList.add("activa");
+
+
+            document.getElementById(
+                "puntosFinales"
+            ).textContent =
+                `${puntos} / ${preguntas.length}`;
+
+
+            const porcentaje =
+                (puntos / preguntas.length) * 100;
+
+
+            let mensaje;
+
+            let rutaImagen =
+                "Img/perdedor.jpg";
+
+            let textoAlt =
+                "Resultado perdedor";
+
+
+            if (porcentaje === 100) {
+
+                mensaje =
+                    "¡Impresionante! Conoces Vinland Saga a la perfección.";
+
+
+                rutaImagen =
+                    "Img/ganador.jfif";
+
+
+                textoAlt =
+                    "Resultado ganador";
+
+
+                sonidoGanador.currentTime = 0;
+
+                sonidoGanador
+                    .play()
+                    .catch(() => {});
+
+            }
+
+
+            else if (porcentaje >= 70) {
+
+                mensaje =
+                    "¡Buen trabajo! Conoces bastante sobre Vinland Saga.";
+
+
+                rutaImagen =
+                    "Img/bueno.jfif";
+
+
+                textoAlt =
+                    "Resultado bueno";
+
+
+                sonidoGanador.currentTime = 0;
+
+                sonidoGanador
+                    .play()
+                    .catch(() => {});
+
+            }
+
+
+            else if (porcentaje >= 40) {
+
+                mensaje =
+                    "No está mal. ¡Todavía puedes mejorar!";
+
+
+                rutaImagen =
+                    "Img/medio.jpg";
+
+
+                textoAlt =
+                    "Resultado medio";
+
+
+                sonidomedio.currentTime = 0;
+
+                sonidomedio
+                    .play()
+                    .catch(() => {});
+
+            }
+
+
+            else {
+
+                mensaje =
+                    "Parece que necesitas volver a Vinland.";
+
+
+                rutaImagen =
+                    "Img/F.PNG";
+
+
+                textoAlt =
+                    "Resultado perdedor";
+
+
+                sonidoPerdedor.currentTime = 0;
+
+                sonidoPerdedor
+                    .play()
+                    .catch(() => {});
+
+            }
+
+
+            document.getElementById(
+                "mensajeResultado"
+            ).textContent = mensaje;
+
+
+            const imagenResultado =
+                document.getElementById(
+                    "resultadoImagen"
+                );
+
+
+            imagenResultado.src =
+                rutaImagen;
+
+            imagenResultado.onerror = () => {
+                imagenResultado.src = "Img/F.PNG";
+            };
+
+
+            imagenResultado.alt =
+                textoAlt;
+
+
+            imagenResultado.classList.remove(
+                "activa"
+            );
+
+
+            
+
+            void imagenResultado.offsetWidth;
+
+
+          
+
+            imagenResultado.classList.add(
+                "activa"
+            );
+        }
+
+
+        function reiniciarTrivia() {
+
+            resultado.classList.remove(
+                "activa"
+            );
+
+
+            inicio.classList.add(
+                "activa"
+            );
+
+        }
+
+    </script>
+
+</body>
+</html>
